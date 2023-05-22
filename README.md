@@ -12,6 +12,9 @@ This repository is an E-Commerce API used as my project at HCMIU. I made it base
     - [x] Sign-in
           - [x] System account
           - [ ] Google account
+- [x] Design Product
+    - [x] Available icons
+    - [x] Customer wishes
 - [x] User account management
     - [x] Profile
     - [x] Addresses
@@ -24,7 +27,7 @@ This repository is an E-Commerce API used as my project at HCMIU. I made it base
     - [x] Review
 - [x] Payment management
     - [x] Paypal
-    - [x] On delivered    
+    - [x] On delivered  
 # Tools And Technologies
 - [React](https://react.dev/)
 - [PostgreSQL](https://www.postgresql.org)
