@@ -12,14 +12,16 @@ import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { MyJwtGuard } from 'src/auth/guard';
 
 @Controller('order')
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
   @Post()
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(MyJwtGuard)
   create(@Body() createOrderDto: CreateOrderDto) {
+    console.log('ctr');
     return this.orderService.create(createOrderDto);
   }
 

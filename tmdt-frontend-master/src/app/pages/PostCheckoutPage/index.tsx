@@ -8,8 +8,9 @@ export const PostCheckoutPage = props => {
   // if (state === null) {
   //   return <Navigate to={'/'}></Navigate>;
   // }
-
+  console.log(state);
   const isSuccessful = state?.isSuccessful ?? true;
+
   if (!isSuccessful) {
     return (
       <Container>

@@ -5,16 +5,18 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useNavigate } from 'react-router-dom';
+import { redirect, useNavigate } from 'react-router-dom';
 import Account from './Account';
 import { Policy } from './Policy';
 import { Support } from './Support';
 import { GeneralBreadcrumbs } from './components/GeneralBreadcrumbs ';
+import { useState } from 'react';
+import { AuthContext } from '../LoginPage/context';
 
 export function General(props) {
   const navigate = useNavigate();
   const [value, setValue] = React.useState(props.value);
-
+  const [reload, setReload] = useState({});
   const page = [<Account />, <Support />, <Policy page={props.page} />];
   const handleChange = newValue => {
     setValue(newValue);
@@ -25,9 +27,10 @@ export function General(props) {
     } else if (newValue === 2) {
       navigate(`/general/policy/0`);
     } else if (newValue === 3) {
-      navigate(`/general`);
+      navigate(`/login`);
     }
   };
+  const authContext = React.useContext(AuthContext);
 
   return (
     <>
@@ -62,12 +65,27 @@ export function General(props) {
                   >
                     <ListItemText primary="Chính sách" />
                   </ListItemButton>
-                  <ListItemButton
-                    selected={value === 3}
-                    onClick={() => handleChange(3)}
-                  >
-                    <ListItemText primary="Đăng nhập" />
-                  </ListItemButton>
+
+                  {localStorage.getItem('accessToken') == null ? (
+                    <ListItemButton
+                      selected={value === 3}
+                      onClick={() => handleChange(3)}
+                    >
+                      <ListItemText primary="Đăng nhập" />
+                    </ListItemButton>
+                  ) : (
+                    <ListItemButton
+                      selected={value === 3}
+                      onClick={() => {
+                        localStorage.removeItem('accessToken');
+                        localStorage.removeItem('UserInfor');
+                        authContext.logout();
+                        handleChange(3);
+                      }}
+                    >
+                      <ListItemText primary="Đăng xuất" />
+                    </ListItemButton>
+                  )}
                 </List>
               </Grid>
               {/* <Grid item xs={0} /> */}

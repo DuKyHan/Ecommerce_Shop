@@ -10,7 +10,7 @@ import {
 
 export const ProductDetailPage = props => {
   const { id } = useParams();
-  const product = allProductData.find(item => item.id === id);
+  const product = allProductData.find(item => item.id.toString() === id);
 
   if (product == null) {
     return <></>;

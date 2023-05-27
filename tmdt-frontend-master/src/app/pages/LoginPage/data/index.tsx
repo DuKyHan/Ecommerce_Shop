@@ -20,7 +20,5 @@ export const getUserInfo = (): any => {
   // console.log(raw);
   // console.log(JSON.parse(raw));
   const data = JSON.parse(raw);
-  const data2 = JSON.parse(data);
-  console.log(typeof data2);
-  return data2;
+  return data;
 };

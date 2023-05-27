@@ -8,6 +8,7 @@ import {
   Input,
   Button,
 } from '@mui/material';
+import { axiosClient } from 'data';
 import { Text } from 'react-konva';
 import ColoredRect from './Tool.js';
 
@@ -188,7 +189,12 @@ export default function Editor({
           element.style.zIndex = null;
           element.style.left = null;
         }
-        downloadURI(canvas.toDataURL('image/png'), 'tes');
+        const image = axiosClient
+          .post('/files/upload', { file: canvas.toDataURL('image/png') })
+          .then(data => {})
+          .catch();
+        return image;
+        // downloadURI(canvas.toDataURL('image/png'), 'tes');
         // document.body.appendChild(canvas);
       });
     }
@@ -382,7 +388,9 @@ export default function Editor({
             variant="contained"
             color="success"
             size="lagre"
-            onClick={() => setDLimage(true)}
+            onClick={() => {
+              setDLimage(true);
+            }}
           >
             Lưu thiết kế
           </Button>

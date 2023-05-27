@@ -23,9 +23,48 @@ export const RegisterForm = props => {
     email: '',
     password: '',
     repassword: '',
-    gender: '',
+    gender: 'Nam',
     numberphone: '',
   });
+  const [error, setError] = useState({
+    email: '',
+    password: '',
+    repassword: '',
+    numberphone: '',
+  });
+  const handleSubmit = () => {
+    let success = true;
+    let errorTemp = {
+      email: '',
+      password: '',
+      repassword: '',
+      numberphone: '',
+    };
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!registerUser.email) {
+      errorTemp.email = 'Please enter an email.';
+      success = false;
+    } else if (!emailRegex.test(registerUser.email)) {
+      errorTemp.email = 'Invalid email format.';
+      success = false;
+    }
+    if (!registerUser.password) {
+      errorTemp.password = 'Please enter an password.';
+      success = false;
+    }
+    if (!(registerUser.password == registerUser.repassword)) {
+      errorTemp.repassword = 'The password does not match';
+      success = false;
+    }
+    if (!registerUser.numberphone) {
+      errorTemp.numberphone = 'Please enter an number phone.';
+      success = false;
+    }
+    if (!success) {
+      setError(errorTemp);
+    }
+    return success;
+  };
   return (
     <Grid
       item
@@ -62,13 +101,13 @@ export const RegisterForm = props => {
               onChange={e => {
                 setRegisterUser({ ...registerUser, email: e.target.value });
               }}
-              //type={showPassword ? 'text' : 'password'}
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton
                     aria-label="toggle password visibility"
-                    //onClick={handleClickShowPassword}
-                    // onMouseDown={handleMouseDownPassword}
+                    onClick={() => {
+                      setRegisterUser({ ...registerUser, email: '' });
+                    }}
                     edge="end"
                   >
                     <CancelOutlined />
@@ -77,9 +116,11 @@ export const RegisterForm = props => {
               }
               label="Email"
             />
-            <FormHelperText id="filled-weight-helper-text">
-              Type your email
-            </FormHelperText>
+            {error.email ? (
+              <FormHelperText>{error.email}</FormHelperText>
+            ) : (
+              <FormHelperText>Type your email</FormHelperText>
+            )}
           </FormControl>
         </Box>
         <Box>
@@ -89,17 +130,18 @@ export const RegisterForm = props => {
             </InputLabel>
             <OutlinedInput
               id="outlined-adornment-password"
+              type="password"
               value={registerUser.password}
               onChange={e => {
                 setRegisterUser({ ...registerUser, password: e.target.value });
               }}
-              //type={showPassword ? 'text' : 'password'}
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton
                     aria-label="toggle password visibility"
-                    //onClick={handleClickShowPassword}
-                    // onMouseDown={handleMouseDownPassword}
+                    onClick={() => {
+                      setRegisterUser({ ...registerUser, password: '' });
+                    }}
                     edge="end"
                   >
                     <CancelOutlined />
@@ -108,9 +150,11 @@ export const RegisterForm = props => {
               }
               label="Password"
             />
-            <FormHelperText id="filled-weight-helper-text">
-              Type your password
-            </FormHelperText>
+            {error.password ? (
+              <FormHelperText>{error.password}</FormHelperText>
+            ) : (
+              <FormHelperText>Type your password</FormHelperText>
+            )}
           </FormControl>
         </Box>
         <Box>
@@ -120,6 +164,7 @@ export const RegisterForm = props => {
             </InputLabel>
             <OutlinedInput
               id="outlined-adornment-password"
+              type="password"
               value={registerUser.repassword}
               onChange={e => {
                 setRegisterUser({
@@ -132,7 +177,9 @@ export const RegisterForm = props => {
                 <InputAdornment position="end">
                   <IconButton
                     aria-label="toggle password visibility"
-                    //onClick={handleClickShowPassword}
+                    onClick={() => {
+                      setRegisterUser({ ...registerUser, repassword: '' });
+                    }}
                     // onMouseDown={handleMouseDownPassword}
                     edge="end"
                   >
@@ -142,9 +189,11 @@ export const RegisterForm = props => {
               }
               label="Password"
             />
-            <FormHelperText id="filled-weight-helper-text">
-              Type your password again
-            </FormHelperText>
+            {error.repassword ? (
+              <FormHelperText>{error.repassword}</FormHelperText>
+            ) : (
+              <FormHelperText>Type your repassword</FormHelperText>
+            )}
           </FormControl>
         </Box>
         <Box
@@ -162,7 +211,6 @@ export const RegisterForm = props => {
                     ...registerUser,
                     gender: 'Nam',
                   });
-                  console.log(registerUser);
                 }}
                 checked={registerUser.gender === 'Nam'}
               />
@@ -177,7 +225,6 @@ export const RegisterForm = props => {
                     ...registerUser,
                     gender: 'Nữ',
                   });
-                  console.log(registerUser);
                 }}
                 checked={registerUser.gender === 'Nữ'}
               />
@@ -198,15 +245,15 @@ export const RegisterForm = props => {
                   ...registerUser,
                   numberphone: e.target.value,
                 });
-                console.log(registerUser);
               }}
               //type={showPassword ? 'text' : 'password'}
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton
                     aria-label="toggle password visibility"
-                    //onClick={handleClickShowPassword}
-                    // onMouseDown={handleMouseDownPassword}
+                    onClick={() => {
+                      setRegisterUser({ ...registerUser, numberphone: '' });
+                    }}
                     edge="end"
                   >
                     <CancelOutlined />
@@ -215,9 +262,11 @@ export const RegisterForm = props => {
               }
               label="Password"
             />
-            <FormHelperText id="filled-weight-helper-text">
-              Type your Number Phone
-            </FormHelperText>
+            {error.numberphone ? (
+              <FormHelperText>{error.numberphone}</FormHelperText>
+            ) : (
+              <FormHelperText>Type your Number Phone</FormHelperText>
+            )}
           </FormControl>
         </Box>
         <Button
@@ -230,18 +279,21 @@ export const RegisterForm = props => {
             textTransform: 'none',
           }}
           onClick={() => {
-            axiosClient
-              .post('/auth/register', {
-                email: registerUser.email,
-                password: registerUser.password,
-                gender: registerUser.gender,
-                repassword: registerUser.repassword,
-                phonenumber: registerUser.numberphone,
-              })
-              .then(data => {
-                navigate('/');
-              })
-              .catch();
+            const success = handleSubmit();
+            if (success) {
+              axiosClient
+                .post('/auth/register', {
+                  email: registerUser.email,
+                  password: registerUser.password,
+                  gender: registerUser.gender,
+                  repassword: registerUser.repassword,
+                  phonenumber: registerUser.numberphone,
+                })
+                .then(data => {
+                  navigate('/');
+                })
+                .catch();
+            }
           }}
         >
           Tạo tài khoản

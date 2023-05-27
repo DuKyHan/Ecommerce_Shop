@@ -13,7 +13,7 @@ datasource db {
 model User {
   id             Int      @id @default(autoincrement())
   email          String   @unique
-  username       String?  @unique
+  username       String?
   gender         String?
   hashedPassword String
   numberPhone    String
@@ -29,15 +29,26 @@ model Product {
   name        String
   price       Int
   description String
-  size        String
-  color       String
   discount    Int
-  image       String
   OrderItem   OrderItem[]
   Category    Category    @relation(fields: [categoryId], references: [id])
   categoryId  Int
+  file        File?       @relation(fields: [fileId], references: [id])
+  fileId      Int?
 
   @@map("products")
+}
+
+model OrderItem {
+  id        Int     @id @default(autoincrement())
+  size      String
+  color     String
+  quantity  Int
+  price     Float
+  productId Int
+  orderId   Int
+  Order     Order   @relation(fields: [orderId], references: [id])
+  Product   Product @relation(fields: [productId], references: [id])
 }
 
 model Category {
@@ -51,6 +62,8 @@ model Category {
 model Order {
   id          Int         @id @default(autoincrement())
   userId      Int
+  name        String
+  email       String
   address     String
   numberphone String
   User        User        @relation(fields: [userId], references: [id])
@@ -59,12 +72,13 @@ model Order {
   OrderItem   OrderItem[]
 }
 
-model OrderItem {
-  id        Int     @id @default(autoincrement())
-  orderId   Int
-  Order     Order   @relation(fields: [orderId], references: [id])
-  Product   Product @relation(fields: [productId], references: [id])
-  productId Int
-  quantity  Int
-  price     Float
+model File {
+  id           Int       @id @default(autoincrement())
+  name         String
+  internalName String    @unique
+  mimetype     String
+  path         String
+  createdAt    DateTime? @default(now())
+  updatedAt    DateTime? @default(now()) @updatedAt
+  Product      Product[]
 }

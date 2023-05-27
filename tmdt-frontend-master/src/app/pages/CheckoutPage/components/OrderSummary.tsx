@@ -116,43 +116,54 @@ export const OrderSummary = (props: OrderSummaryProps) => {
               <Button
                 sx={{ mt: 2 }}
                 variant="contained"
-                onClick={() =>
-                  axiosClient
-                    .post(
-                      '/order',
-                      // JSON.stringify({
-                      //   userId: 1,
-                      //   address: 'asdasd',
-                      //   numberphone: '29371239123',
-                      //   orderitems: cartItems.map(ci => ({
-                      //     productId: 1,
-                      //     quantity: ci.quantity,
-                      //     price: ci.price,
-                      //   })),
-                      // }),
-                      {
+                onClick={() => {
+                  console.log(
+                    'Before ' +
+                      JSON.stringify({
                         userId: 1,
                         address: 'asdasd',
+                        name: 'Truong Van D',
                         numberphone: '29371239123',
+                        email: 'user@gmail.com',
                         orderitems: cartItems.map(ci => ({
-                          productId: 1,
+                          productId: +ci.id,
+                          size: ci.size,
+                          color: ci.color,
                           quantity: ci.quantity,
                           price: ci.price,
                         })),
-                      },
-                    )
-                    .catch(err =>
-                      navigate('/checkout/done', {
-                        state: { isSuccessful: false },
                       }),
-                    )
+                  );
+                  axiosClient
+                    .post('/order', {
+                      userId: 1,
+                      address: 'asdasd',
+                      name: 'Truong Van D',
+                      numberphone: '29371239123',
+                      email: 'user@gmail.com',
+                      orderitems: cartItems.map(ci => ({
+                        productId: +ci.id,
+                        size: ci.size,
+                        color: ci.color,
+                        quantity: ci.quantity,
+                        price: ci.price,
+                      })),
+                    })
                     .then(data => {
+                      console.log('đone' + JSON.stringify(data));
                       context.clearCartItems();
                       navigate('/checkout/done', {
                         state: { isSuccessful: true },
                       });
                     })
-                }
+                    .catch(err => {
+                      console.log('err');
+                      navigate('/checkout/done', {
+                        state: { isSuccessful: false },
+                        replace: true,
+                      });
+                    });
+                }}
               >
                 Đặt hàng
               </Button>

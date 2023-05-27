@@ -10,12 +10,16 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { Link } from '@mui/material';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { UserInfoContext } from '../LoginPage/context';
+import { getUserInfo } from '../LoginPage/data';
+import { axiosClient } from 'data';
 
 export default function Account() {
   const userInfoContext = useContext(UserInfoContext);
   const userInfo = userInfoContext.getUserInfo();
+  const [disable, setDisable] = useState(true);
+  const [updateUser, setUpdateUser] = useState(userInfo);
   return (
     <Box sx={{ p: 3 }}>
       <Typography gutterBottom variant="h5" component="nav">
@@ -36,9 +40,39 @@ export default function Account() {
               <Typography sx={{ ml: 2 }}>Customer Name</Typography>
             </Grid>
             <Grid item xs={2} sx={{ ml: 5 }}>
-              <Link underline="hover" color="primary" href="#">
-                Thay đổi
-              </Link>
+              {disable ? (
+                <Link
+                  underline="hover"
+                  color="primary"
+                  href="#"
+                  onClick={() => setDisable(!disable)}
+                >
+                  Thay đổi
+                </Link>
+              ) : (
+                <Link
+                  underline="hover"
+                  color="primary"
+                  href="#"
+                  onClick={async () => {
+                    const id = userInfo.id;
+                    const user = await axiosClient
+                      .patch(`user/` + id, {
+                        username: updateUser.username,
+                        gender: updateUser.gender,
+                        numberphone: updateUser.numberPhone,
+                        password: 'dukyhan123',
+                      })
+                      .then((data: any) => {
+                        userInfoContext.setUserInfor(updateUser);
+                        console.log(data);
+                      });
+                    setDisable(!disable);
+                  }}
+                >
+                  Đồng ý
+                </Link>
+              )}
             </Grid>
           </Grid>
           <Grid container spacing={2}>
@@ -49,7 +83,8 @@ export default function Account() {
               <TextField
                 hiddenLabel
                 fullWidth
-                value={userInfo.email}
+                disabled
+                value={updateUser.email}
                 type="email"
                 defaultValue="customer@gmail.com"
                 variant="filled"
@@ -67,16 +102,20 @@ export default function Account() {
                 hiddenLabel
                 fullWidth
                 type="text"
-                value={userInfo.username}
-                defaultValue="nameless"
+                disabled={disable}
+                value={updateUser.username}
+                defaultValue="Nguyễn Văn A"
+                onChange={e =>
+                  setUpdateUser({ ...updateUser, username: e.target.value })
+                }
                 variant="filled"
                 size="small"
               />
             </Grid>
             <Grid item xs={2} sx={{ ml: 3 }}>
-              <Link underline="hover" color="primary" href="#">
+              {/* <Link underline="hover" color="primary" href="#">
                 Thay đổi
-              </Link>
+              </Link> */}
             </Grid>
           </Grid>
           <Grid container spacing={2}>
@@ -90,18 +129,20 @@ export default function Account() {
                 name="row-radio-buttons-group"
               >
                 <FormControlLabel
-                  disabled
-                  value="female"
+                  disabled={disable}
+                  value="Female"
                   control={<Radio />}
                   label="Female"
-                  checked={userInfo.gender == 'Nữ' ? true : false}
+                  onClick={e => setUpdateUser({ ...updateUser, gender: 'Nữ' })}
+                  checked={updateUser.gender == 'Nữ' ? true : false}
                 />
                 <FormControlLabel
-                  disabled
+                  disabled={disable}
                   value="male"
                   control={<Radio />}
                   label="Male"
-                  checked={userInfo.gender == 'Nam' ? true : false}
+                  onClick={e => setUpdateUser({ ...updateUser, gender: 'Nam' })}
+                  checked={updateUser.gender == 'Nam' ? true : false}
                 />
               </RadioGroup>
             </Grid>
@@ -116,16 +157,20 @@ export default function Account() {
                 hiddenLabel
                 fullWidth
                 type="text"
-                value={userInfo.numberPhone}
+                disabled={disable}
+                value={updateUser.numberPhone}
                 defaultValue="0971667308"
+                onChange={e =>
+                  setUpdateUser({ ...updateUser, numberPhone: e.target.value })
+                }
                 variant="filled"
                 size="small"
               />
             </Grid>
             <Grid item xs={2} sx={{ ml: 3 }}>
-              <Link underline="hover" color="primary" href="#">
+              {/* <Link underline="hover" color="primary" href="#">
                 Thay đổi
-              </Link>
+              </Link> */}
             </Grid>
           </Grid>
           <Grid container spacing={2}>
@@ -134,19 +179,19 @@ export default function Account() {
             </Grid>
             <Grid item xs={6} sx={{ marginRight: 2 }}>
               <TextField
-                disabled
+                disabled={disable}
                 hiddenLabel
                 fullWidth
-                type="password"
                 defaultValue="1234556787"
                 variant="filled"
                 size="small"
-              />
+                type={disable ? 'password' : 'text'}
+              ></TextField>
             </Grid>
             <Grid item xs={2} sx={{ ml: 3 }}>
-              <Link underline="hover" color="primary" href="#">
+              {/* <Link underline="hover" color="primary" href="#">
                 Thay đổi
-              </Link>
+              </Link> */}
             </Grid>
           </Grid>
         </Stack>

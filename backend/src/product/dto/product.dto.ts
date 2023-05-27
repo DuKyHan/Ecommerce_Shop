@@ -10,18 +10,9 @@ export class ProductDTO {
   @IsNotEmpty()
   @IsString()
   description: string;
-  @IsNotEmpty()
-  @IsString()
-  size: string;
-  @IsNotEmpty()
-  @IsString()
-  color: string;
   @IsNumber()
   @IsNotEmpty()
   discount: number;
-  @IsNotEmpty()
-  @IsString()
-  image: string;
   @IsNotEmpty()
   @IsNumber()
   categoryID: number;

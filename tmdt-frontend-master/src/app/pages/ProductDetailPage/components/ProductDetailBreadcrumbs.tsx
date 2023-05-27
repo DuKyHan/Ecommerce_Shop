@@ -8,7 +8,7 @@ export const ProductDetailBreadcrumbs = (
 ) => {
   const product = props.product;
   const category = categoryData.find(
-    item => item.id === props.product.categoryId,
+    item => item.id.toString() === props.product.categoryId,
   );
   const categoryName = category?.name ?? 'Tất cả sản phẩm';
 

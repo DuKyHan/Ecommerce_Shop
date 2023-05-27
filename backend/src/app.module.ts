@@ -6,6 +6,8 @@ import { PrismaModule } from './prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
 import { OrderModule } from './order/order.module';
 import { CategoryModule } from './category/category.module';
+import { configModuleOptions } from './config/module-options';
+import { FileModule } from './file/file.module';
 
 @Module({
   imports: [
@@ -13,9 +15,10 @@ import { CategoryModule } from './category/category.module';
     UserModule,
     ProductModule,
     PrismaModule,
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot(configModuleOptions),
     OrderModule,
     CategoryModule,
+    FileModule,
   ],
   controllers: [],
   providers: [],
